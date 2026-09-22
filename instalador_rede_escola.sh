@@ -37,13 +37,13 @@ instalar_impressora() {
     
     # Se o PPD for 'everywhere', instalamos via IPP
     if [ "$PPD" == "everywhere" ]; then
-        lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$MODELO" -o media=A4 -o PageSize=A4
     elif [[ "$PPD" == /* ]]; then
         # Caminho absoluto para o arquivo PPD (ex: Brother)
-        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$MODELO" -o media=A4 -o PageSize=A4
     else
         # PPD interno do sistema listado pelo lpinfo
-        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -m "$PPD" -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -m "$PPD" -D "$MODELO" -o media=A4 -o PageSize=A4
     fi
 }
 
@@ -84,3 +84,16 @@ echo "========================================================"
 echo "   ✅ Instalação Concluída com Sucesso!"
 echo "   Todas as impressoras foram configuradas na rede."
 echo "========================================================"
+echo ""
+echo "Resumo das impressoras e configuração de folha (A4):"
+echo "--------------------------------------------------------"
+for printer in $(lpstat -p | awk '{print $2}'); do
+    echo "🖨️  Impressora: $printer"
+    
+    # Extrai a configuração de tamanho do papel, e pega apenas o valor que vem depois de media=
+    TAMANHO=$(lpoptions -p "$printer" | grep -o 'media=[^ ]*' | cut -d'=' -f2)
+    echo "    Tamanho do Papel configurado: $TAMANHO"
+    echo "--------------------------------------------------------"
+done
+echo ""
+echo "Tudo pronto! Você já pode fechar o terminal."
