@@ -1,0 +1,34 @@
+{
+  "impressoras": [
+    {
+      "nome": "EFS_SEC_I",
+      "ip": "192.168.1.20",
+      "modelo": "Canon MAXIFY GX7010",
+      "ppd": "everywhere"
+    },
+    {
+      "nome": "EFS_SEC_II",
+      "ip": "192.168.1.36",
+      "modelo": "Canon MAXIFY GX7010",
+      "ppd": "everywhere"
+    },
+    {
+      "nome": "EFS_ADM",
+      "ip": "192.168.1.53",
+      "modelo": "Canon MAXIFY GX7010",
+      "ppd": "everywhere"
+    },
+    {
+      "nome": "EFS_EF",
+      "ip": "192.168.1.80",
+      "modelo": "EPSON L3250",
+      "ppd": "lsb/usr/epson-inkjet-printer-escpr/Epson-L3250_Series-epson-escpr-en.ppd"
+    },
+    {
+      "nome": "EFS_EI_BROTHER",
+      "ip": "192.168.1.43",
+      "modelo": "BROTHER DCP-L2540DW",
+      "ppd": "/opt/brother/Printers/DCPL2540DW/cupswrapper/brother-DCPL2540DW-cups-en.ppd"
+    }
+  ]
+}
