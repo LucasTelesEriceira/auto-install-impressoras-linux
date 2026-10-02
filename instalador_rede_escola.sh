@@ -29,8 +29,8 @@ USUARIO_REAL=${SUDO_USER:-$(logname)}
 echo "[1/4] Verificando e Instalando Drivers Base e Utilitários..."
 # Instala drivers da Brother e da Epson apenas (Canon GX7010 usa Driverless)
 # Substituímos pamac build por yay (que lida melhor com execução não-interativa)
-# Corrigido o nome do pacote brother-dcpl2540dw-cups
-sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcpl2540dw-lpr brother-dcpl2540dw-cups epson-inkjet-printer-escpr jq
+# Corrigido o nome do pacote brother-dcp-l2540dw-cups-bin
+sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcp-l2540dw-lpr-bin brother-dcp-l2540dw-cups-bin epson-inkjet-printer-escpr jq
 
 echo ""
 echo "[2/4] Iniciando Serviço de Impressão (CUPS)..."
