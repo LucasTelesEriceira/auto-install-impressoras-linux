@@ -27,10 +27,8 @@ echo ""
 USUARIO_REAL=${SUDO_USER:-$(logname)}
 
 echo "[1/4] Verificando e Instalando Drivers Base e Utilitários..."
-# Instala drivers da Brother e da Epson apenas (Canon GX7010 usa Driverless)
-# Substituímos pamac build por yay (que lida melhor com execução não-interativa)
-# Corrigido o nome do pacote brother-dcp-l2540dw-cups-bin
-sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcp-l2540dw-lpr-bin brother-dcp-l2540dw-cups-bin epson-inkjet-printer-escpr jq
+# Instala drivers da Brother, Epson e Canon (cnijfilter2 para fallback quando Canon estiver offline)
+sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcp-l2540dw-lpr-bin brother-dcp-l2540dw-cups-bin epson-inkjet-printer-escpr cnijfilter2 jq
 
 echo ""
 echo "[2/4] Configurando CUPS e Avahi como Servidor de Rede..."
@@ -59,7 +57,14 @@ instalar_impressora() {
     
     # Cria a impressora com a Descrição (-D) igual ao Nome da impressora
     if [ "$PPD" == "everywhere" ]; then
-        lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$NOME"
+        if ! lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$NOME" 2>/dev/null; then
+            echo "    ⚠️  '$NOME' ($IP) não respondeu ao IPP Everywhere (pode estar desligada). Aplicando PPD local de fallback..."
+            if [[ "${MODELO^^}" == *"GX70"* ]] && [ -f "/usr/share/cups/model/canongx7000.ppd" ]; then
+                lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -P "/usr/share/cups/model/canongx7000.ppd" -D "$NOME"
+            else
+                lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m "drv:///sample.drv/generic.ppd" -D "$NOME"
+            fi
+        fi
     elif [[ "$PPD" == /* ]]; then
         lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$NOME"
     else

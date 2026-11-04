@@ -34,7 +34,7 @@
       "nome": "EFS_EI_BROTHER",
       "ip": "192.168.1.43",
       "modelo": "BROTHER DCP-L2540DW",
-      "ppd": "/opt/brother/Printers/DCPL2540DW/cupswrapper/brother-DCPL2540DW-cups-en.ppd"
+      "ppd": "/usr/share/cups/model/Brother/brother-DCPL2540DW-cups-en.ppd"
     }
   ]
 }
