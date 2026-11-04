@@ -33,8 +33,13 @@ echo "[1/4] Verificando e Instalando Drivers Base e Utilitários..."
 sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcp-l2540dw-lpr-bin brother-dcp-l2540dw-cups-bin epson-inkjet-printer-escpr jq
 
 echo ""
-echo "[2/4] Iniciando Serviço de Impressão (CUPS)..."
-systemctl start cups
+echo "[2/4] Configurando CUPS e Avahi como Servidor de Rede..."
+# Desativa o cups-browsed para evitar a criação automática de filas 'implicitclass://' que ignoram cópias, duplex e orientação
+systemctl disable --now cups-browsed 2>/dev/null
+systemctl mask cups-browsed 2>/dev/null
+systemctl enable --now cups
+systemctl enable --now avahi-daemon 2>/dev/null
+cupsctl --remote-any --share-printers
 
 # Função auxiliar para instalar impressoras
 instalar_impressora() {
@@ -52,17 +57,19 @@ instalar_impressora() {
     echo " -> Configurando: $NOME ($MODELO) no IP $IP"
     lpadmin -x "$NOME" 2>/dev/null
     
-    # Cria a impressora de acordo com o tipo
+    # Cria a impressora com a Descrição (-D) igual ao Nome da impressora
     if [ "$PPD" == "everywhere" ]; then
-        lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -m everywhere -D "$NOME"
     elif [[ "$PPD" == /* ]]; then
-        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$NOME"
     else
-        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -m "$PPD" -D "$MODELO"
+        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -m "$PPD" -D "$NOME"
     fi
     
-    # Força a configuração A4 em um comando separado (necessário para IPP Everywhere fixar o valor)
-    lpadmin -p "$NOME" -o PageSize=A4 -o media=A4
+    # Força A4, habilita compartilhamento na rede e corrige bug de múltiplas cópias via software no CUPS
+    lpadmin -p "$NOME" -E -o PageSize=A4 -o media=A4 -o printer-is-shared=true -o cupsManualCopies=true
+    cupsenable "$NOME" 2>/dev/null
+    cupsaccept "$NOME" 2>/dev/null
 }
 
 echo ""

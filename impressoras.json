@@ -25,6 +25,12 @@
       "ppd": "lsb/usr/epson-inkjet-printer-escpr/Epson-L3250_Series-epson-escpr-en.ppd"
     },
     {
+      "nome": "EPSON_L4260_Series",
+      "ip": "192.168.1.5",
+      "modelo": "EPSON L4260",
+      "ppd": "lsb/usr/epson-inkjet-printer-escpr/Epson-L4260_Series-epson-escpr-en.ppd"
+    },
+    {
       "nome": "EFS_EI_BROTHER",
       "ip": "192.168.1.43",
       "modelo": "BROTHER DCP-L2540DW",
