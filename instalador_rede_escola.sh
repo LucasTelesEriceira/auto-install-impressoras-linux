@@ -66,7 +66,11 @@ instalar_impressora() {
             fi
         fi
     elif [[ "$PPD" == /* ]]; then
-        lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$NOME"
+        if [[ "${MODELO^^}" == *"CANON"* || "${MODELO^^}" == *"GX70"* ]]; then
+            lpadmin -p "$NOME" -E -v "ipp://$IP/ipp/print" -P "$PPD" -D "$NOME"
+        else
+            lpadmin -p "$NOME" -E -v "socket://$IP:9100" -P "$PPD" -D "$NOME"
+        fi
     else
         lpadmin -p "$NOME" -E -v "socket://$IP:9100" -m "$PPD" -D "$NOME"
     fi

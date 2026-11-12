@@ -4,19 +4,19 @@
       "nome": "EFS_SEC_I",
       "ip": "192.168.1.20",
       "modelo": "Canon MAXIFY GX7010",
-      "ppd": "everywhere"
+      "ppd": "/usr/share/cups/model/canongx7000.ppd"
     },
     {
       "nome": "EFS_SEC_II",
       "ip": "192.168.1.36",
       "modelo": "Canon MAXIFY GX7010",
-      "ppd": "everywhere"
+      "ppd": "/usr/share/cups/model/canongx7000.ppd"
     },
     {
       "nome": "EFS_ADM",
       "ip": "192.168.1.53",
       "modelo": "Canon MAXIFY GX7010",
-      "ppd": "everywhere"
+      "ppd": "/usr/share/cups/model/canongx7000.ppd"
     },
     {
       "nome": "EFS_EF",
