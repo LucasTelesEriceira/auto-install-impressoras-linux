@@ -30,6 +30,11 @@ echo "[1/4] Verificando e Instalando Drivers Base e Utilitários..."
 # Instala drivers da Brother, Epson e Canon (cnijfilter2 para fallback quando Canon estiver offline)
 sudo -u "$USUARIO_REAL" yay -S --noconfirm --needed brother-dcp-l2540dw-lpr-bin brother-dcp-l2540dw-cups-bin epson-inkjet-printer-escpr cnijfilter2 jq
 
+# Corrige bug de inversão do verso no duplex das impressoras Canon (adiciona cupsBackSide: Rotated)
+if [ -f "/usr/share/cups/model/canongx7000.ppd" ] && ! grep -q "cupsBackSide" "/usr/share/cups/model/canongx7000.ppd"; then
+    sed -i '/\*CloseUI: \*Duplex/a \*cupsBackSide: Rotated' "/usr/share/cups/model/canongx7000.ppd"
+fi
+
 echo ""
 echo "[2/4] Configurando CUPS e Avahi como Servidor de Rede..."
 # Desativa o cups-browsed para evitar a criação automática de filas 'implicitclass://' que ignoram cópias, duplex e orientação
